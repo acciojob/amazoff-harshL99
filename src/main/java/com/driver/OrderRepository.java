@@ -23,12 +23,14 @@ public class OrderRepository {
     public void assignOrdertoPartner(String oid,String pid){
         if(orderMap.containsKey(oid) && deliveryPartnerMap.containsKey(pid)){
             List<Order> orders=new ArrayList<>();
+
+            if(deliveryPartnerOrders.containsKey(pid))
             orders=deliveryPartnerOrders.get(pid);
-            if(orders.size()>0) {
+
                 for (Order order : orders) {
                     if (order.getId().equals(oid)) return;  //Avoid duplicating Orders to One Partner...
                 }
-            }
+
             orders.add(orderMap.get(oid));
             deliveryPartnerOrders.put(pid,orders);
         }
@@ -48,7 +50,7 @@ public class OrderRepository {
         if(deliveryPartnerOrders.containsKey(pid)) {  //See if this partner is there for delivery or not...
             List<String> orders = new ArrayList<>();
 
-            if(deliveryPartnerOrders.get(pid).size()!=0){   //For Safety check if orders are assigned or not...
+            if(deliveryPartnerOrders.get(pid)!=null && deliveryPartnerOrders.get(pid).size()>0){   //For Safety check if orders are assigned or not...
                 for(Order order : deliveryPartnerOrders.get(pid)){
                     orders.add(order.getId());
                 }
@@ -86,7 +88,7 @@ public class OrderRepository {
         int mins=Integer.parseInt(time.substring(3));
         int limit=(hours*60)+mins;
 
-        if(deliveryPartnerOrders.get(pid).size()>0) {
+        if(deliveryPartnerOrders.get(pid)!=null && deliveryPartnerOrders.get(pid).size()>0) {
             for (Order order : deliveryPartnerOrders.get(pid)) {
                 if (order.getDeliveryTime() > limit) count++;
             }

@@ -32,6 +32,8 @@ public class OrderRepository {
                 }
 
             orders.add(orderMap.get(oid));
+            int noOfOrders=deliveryPartnerMap.get(pid).getNumberOfOrders();
+            deliveryPartnerMap.get(pid).setNumberOfOrders(noOfOrders+1);
             deliveryPartnerOrders.put(pid,orders);
         }
     }
@@ -127,6 +129,19 @@ public class OrderRepository {
     public void deleteAndUnassignTheOrderFromPartner(String oid){
 //        orderMap.remove(oid);
         int idx=-1,i;
+        String pid=" ";
+
+        for(String partner : deliveryPartnerMap.keySet()){
+            if(deliveryPartnerOrders.containsKey(partner)) {
+                for (Order order : deliveryPartnerOrders.get(partner)) {
+                    if (order.getId().equals(oid)){
+                        pid=partner;
+                        break;
+                    }
+                }
+            }
+            if(!pid.equals(" ")) break;
+        }
 
         for(List<Order> orderList : deliveryPartnerOrders.values()){
             for(i=0;i<orderList.size();i++){
@@ -137,6 +152,8 @@ public class OrderRepository {
             }
             if(idx!=-1) {
                 orderList.remove(i);
+                int noOfOrders=deliveryPartnerMap.get(pid).getNumberOfOrders();
+                deliveryPartnerMap.get(pid).setNumberOfOrders(noOfOrders-1);
                 break;
             }
         }

@@ -104,6 +104,7 @@ public class OrderRepository {
         double lastTime=0.0;
         lastTime=maxTime/60.0;
 
+        lastTime=Math.round(lastTime*100.0)/100.0; //Nearest 2 decimal places according time...
         String res="";
         res=res+lastTime;
 
@@ -112,6 +113,8 @@ public class OrderRepository {
             if(res.charAt(i)!='.') time=time+res.charAt(i);
             else break;
         }
+        if(time.length()==1) time='0'+time;
+
         time=time+":"+res.substring(i+1);
 
         return time;
@@ -122,7 +125,7 @@ public class OrderRepository {
         deliveryPartnerOrders.remove(pid);
     }
     public void deleteAndUnassignTheOrderFromPartner(String oid){
-        orderMap.remove(oid);
+//        orderMap.remove(oid);
         int idx=-1,i;
 
         for(List<Order> orderList : deliveryPartnerOrders.values()){
